@@ -2,7 +2,9 @@ package com.example.android.justjava;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import java.text.NumberFormat;
 
@@ -28,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void submitOrder(View view) {
-        createOrderSummary(calculatePrice());
+        int price = calculatePrice();
+        createOrderSummary(price);
     }
 
     private void displayQuantity(int number) {
@@ -46,7 +49,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createOrderSummary(int price) {
-        String priceMessage = "Name: Alex \nQuantity: " + quantity + " \nTotal: $" + price + "\nThank You!";
+        CheckBox checkBox = (CheckBox) findViewById(R.id.checkbox);
+
+        String priceMessage = "Name: Alex " +
+                "\nAdd shipped cream? " + checkBox.isChecked() +
+                "\nQuantity: " + quantity +
+                "\nTotal: $" + price +
+                "\nThank You!";
         displayMessage(priceMessage);
     }
 }
