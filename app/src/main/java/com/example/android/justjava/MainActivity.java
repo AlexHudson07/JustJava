@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 import java.text.NumberFormat;
 
@@ -30,8 +31,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void submitOrder(View view) {
-        int price = calculatePrice();
-        createOrderSummary(price);
+
+        CheckBox whippedCreamCheckBox = (CheckBox) findViewById(R.id.whippedCream_checkbox);
+        CheckBox chocolateCheckBox = (CheckBox) findViewById(R.id.chocolate_checkbox);
+        EditText nameEditText = (EditText) findViewById(R.id.name_EditText);
+
+        int price = calculatePrice(chocolateCheckBox.isChecked(), whippedCreamCheckBox.isChecked());
+        createOrderSummary(nameEditText.getText().toString(),
+                whippedCreamCheckBox.isChecked(),
+                chocolateCheckBox.isChecked(),
+                price);
     }
 
     private void displayQuantity(int number) {
@@ -44,15 +53,27 @@ public class MainActivity extends AppCompatActivity {
         orderSummaryTextView.setText(message);
     }
 
-    private int calculatePrice() {
-        return quantity * pricePerCup;
+    @org.jetbrains.annotations.Contract(pure = true)
+    private int calculatePrice(boolean addChocolate, boolean addWhippedCream) {
+
+        int newPrice = pricePerCup;
+
+        if (addChocolate) {
+            newPrice += 1;
+        }
+
+        if (addWhippedCream) {
+            newPrice += 1;
+        }
+
+        return quantity * newPrice;
     }
 
-    private void createOrderSummary(int price) {
-        CheckBox checkBox = (CheckBox) findViewById(R.id.checkbox);
-
-        String priceMessage = "Name: Alex " +
-                "\nAdd shipped cream? " + checkBox.isChecked() +
+    private void createOrderSummary(String name, boolean whippedCream, boolean chocolate, int price) {
+        
+        String priceMessage = "Name: "+ name +
+                "\nAdd shipped cream? " + whippedCream +
+                "\nAdd chocolate? " + chocolate +
                 "\nQuantity: " + quantity +
                 "\nTotal: $" + price +
                 "\nThank You!";
